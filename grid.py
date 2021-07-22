@@ -153,8 +153,8 @@ class grid:
             func = paint_types[paint]
             enum = map(functools.partial(func, dim=self.dim), np.ndenumerate(self.canvas))
         for idx, val in enum:
-            val = 0.002 if val <= 0.001 else val
-            val = 0.998 if val >= 0.999 else val
+            val = 0.005 if val < 0.005 else val
+            val = 0.995 if val > 0.995 else val
             self.canvas[idx] = val
         self.gridcur = paint
         

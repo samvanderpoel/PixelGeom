@@ -94,6 +94,45 @@ def octahedron(name, center, rad, shade = 1, rand = False, isosceles = False):
         shp.rotate3d(axis = np.random.rand(3), angle = 2*math.pi*np.random.rand())
     return shp
 
+def dodecahedron(name, center, rad, shade = 1, rand = False):
+    c = 2 / (1 + np.sqrt(5))
+    n = np.sqrt(1 + c**2)
+    ico_nodes = {1:np.array([ 0,  c, -1]) / n,
+                 2:np.array([ c,  1,  0]) / n,
+                 3:np.array([-c,  1,  0]) / n,
+                 4:np.array([ 0,  c,  1]) / n,
+                 5:np.array([ 0, -c,  1]) / n,
+                 6:np.array([-1,  0,  c]) / n,
+                 7:np.array([ 0, -c, -1]) / n,
+                 8:np.array([ 1,  0, -c]) / n,
+                 9:np.array([ 1,  0,  c]) / n,
+                 10:np.array([-1,  0, -c]) / n,
+                 11:np.array([ c, -1,  0]) / n,
+                 12:np.array([-c, -1,  0]) / n}
+    shp = shape(name = name, shade = shade, dims = 3)
+    faces = [[3, 2, 1], [2, 3, 4], [6, 5, 4], [5, 9, 4],
+             [8, 7, 1], [7, 10, 1], [12, 11, 5], [11, 12, 7],
+             [10, 6, 3], [6, 10, 12], [9, 8, 2], [8, 9, 11],
+             [3, 6, 4], [9, 2, 4], [10, 3, 1], [2, 8, 1],
+             [12, 10, 7], [8, 11, 7], [6, 12, 5], [11, 9, 5]]
+    centers_of_mass = [np.array([np.mean([ico_nodes[j][k] for j in faces[i]]) \
+                                 for k in [0, 1, 2]]) for i in range(20)]
+    dodec_nodes = [node / np.linalg.norm(node) for node in centers_of_mass]
+    duals = {i:(faces[i]) for i in range(20)}
+    shp.add_nodes_from([(i, {'pos':dodec_nodes[i]}) for i in range(20)])
+    for i in duals:
+        for j in duals:
+            if len(list(set(duals[i]) & set(duals[j]))) == 2:
+                shp.add_edge(i, j)
+    center = np.asarray(center)
+    shp.translate(direction = center)
+    com = center_of_mass(shp, dims = 3)
+    factor = rad / np.linalg.norm(shp.nodes[0]["pos"] - com)
+    shp.scale(factor)
+    if rand:
+        shp.rotate3d(axis = np.random.rand(3), angle = 2*math.pi*np.random.rand())
+    return shp
+
 def icosahedron(name, center, rad, shade = 1, rand = False):
     center = np.asarray(center)
     c = 2 / (1 + np.sqrt(5))

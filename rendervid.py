@@ -9,7 +9,7 @@ parser.add_argument('--file', type=str, required=True)
 file = parser.parse_args().file
 
 fourcc = cv2.VideoWriter_fourcc(*'MP4V')
-video=cv2.VideoWriter('anim_out.mp4', fourcc, 20, (1000, 1000))
+video=cv2.VideoWriter('anim_out.mp4', fourcc, 35, (1000, 1000))
 imgs = np.load(file)
 
 n = len(imgs)

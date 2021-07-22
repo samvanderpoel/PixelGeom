@@ -14,17 +14,17 @@ s = 0.3
 a1, b1, c1 = np.random.rand(3)
 a2, b2, c2 = np.random.rand(3)
 
-for i in np.linspace(0.1, 10, num=700):
+for i in np.linspace(0.1, 10, num=300):
     print('Working on i = ' + str(i))
 
     tico = dodecahedron(name = 'tico', center = (s*499, s*499, s*100),
-                                rad = (math.sin(i))**2*s*1500, shade = 1)
+                        rad = s*400, shade = 1)
     mygrid = grid(shapes = [tico], dim = (round(s*1000), round(s*1000)))
     mygrid.rotate_shape3d(name = 'tico', axis = [a1, b1, c1], angle = i*math.pi/5)
     mygrid.rotate_shape3d(name = 'tico', axis = [a2, b2, c2], angle = i*math.pi/5)
     mygrid.paint_canvas(paint = 'gradient')
     mygrid.draw_shapes()
-    cmap = rgb_to_cmap(colors = [[205,92,92], [0,128,128], [221,160,221]], penlow = [0,255,127], penhigh = [205,133,63])
+    cmap = rgb_to_cmap(colors = [[255,0,0], [255,255,255], [0,0,255]], penlow = [0,255,127], penhigh = [255,165,0])
     mygrid.plot_grid('pic.png', cmap = cmap, dpi = 200)
     imgs.append(cv2.imread('pic.png'))
     os.remove('pic.png')
