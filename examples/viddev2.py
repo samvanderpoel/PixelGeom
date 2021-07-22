@@ -18,7 +18,7 @@ for i in np.linspace(0.1, 10, num=700):
     print('Working on i = ' + str(i))
 
     tico = dodecahedron(name = 'tico', center = (s*499, s*499, s*100),
-                                rad = (math.sin(i))**2*s*1500, shade = 1)
+                        rad = (math.sin(i))**2*s*1500, shade = 1)
     mygrid = grid(shapes = [tico], dim = (round(s*1000), round(s*1000)))
     mygrid.rotate_shape3d(name = 'tico', axis = [a1, b1, c1], angle = i*math.pi/5)
     mygrid.rotate_shape3d(name = 'tico', axis = [a2, b2, c2], angle = i*math.pi/5)
@@ -32,7 +32,7 @@ for i in np.linspace(0.1, 10, num=700):
 np.save('anim.npy', imgs)
 
 fourcc = cv2.VideoWriter_fourcc(*'MP4V')
-video=cv2.VideoWriter('triambic_icosahedron.mp4', fourcc, 50, (1000, 1000)) # img dims must meet or exceed resolution determined by dpi above
+video=cv2.VideoWriter('dodecahedron.mp4', fourcc, 50, (1000, 1000)) # img dims must meet or exceed resolution determined by dpi above
 
 n = len(imgs)
 for idx, image in enumerate(imgs):
