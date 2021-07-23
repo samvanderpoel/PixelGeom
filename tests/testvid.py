@@ -1,50 +1,42 @@
-import copy
 import cv2
 import math
+import numpy as np
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) # add parent dir to sys path
-import numpy as np
 
 from grid import *
 from shape import *
 
-imgs = []
-s = 0.25
+if not os.path.isdir('tests/test-output'):
+    os.makedirs('tests/test-output')
 
-first_shape = icosahedron(name = 'ico', center = (s*749, s*749, s*100), rad = s*150, shade = 0)
-shape_list = [first_shape]
+# CREATE VID OF SHAPE ROTATION - DEBUG HERE:
 
-a, b, c = np.random.rand(3)
-num_shapes = 5
+s = 0.5   # param to tune granularity/resolution of frames
+imgs = [] # where frames are stored
+
+# Replace shape-generating function here:
+testshp = triambic_icosahedron(name = 'test', center = (s*499, s*499, s*100), rad = s*400, shade = 1)
+mygrid = grid(shapes = [testshp], dim = (round(s*1000), round(s*1000)))
 
 frames = 100
 low, high = 0.1, 10
+interval = (high - low) / (frames - 1)
 for idx, i in enumerate(np.linspace(0.1, 10, num = frames)):
     sys.stdout.write('\rCreating frame ' + str(idx+1) + ' of ' + str(frames))
     sys.stdout.flush()
-    new_shape = copy.deepcopy(shape_list[0])
-    new_shape.rotate3d(axis = [0, 0, 1], angle = math.pi/50, center = (s*499 + 30*math.cos(i), s*499 + 30*math.sin(i), s*100))
-    if len(shape_list) >= 5:
-        shape_list.pop()
-        shape_list.insert(0, new_shape)
-    else:
-        shape_list.insert(0, new_shape)
-    for idx, shp in enumerate(shape_list):
-        shp.name = 'ico' + str(idx + 1)
-        shp.shade = idx/(idx + 1)
-
-    mygrid = grid(shapes = shape_list, dim = (round(s*1000), round(s*1000)))
-    mygrid.paint_canvas('radial')
+    mygrid.rotate_shape3d(name = 'test', axis = [0, math.cos(i), math.sin(i)], angle = interval * math.pi/5)
+    mygrid.rotate_shape3d(name = 'test', axis = [1, 0, 0], angle = interval * math.pi/5)
     mygrid.draw_shapes()
-    mygrid.plot_grid('pic.png', dpi=200)
+    cmap = rgb_to_cmap(colors = [[176,224,230]], penlow = None, penhigh = [160,0,0])
+    mygrid.plot_grid('pic.png', cmap = cmap, dpi = 200)
     imgs.append(cv2.imread('pic.png'))
     os.remove('pic.png')
 print('\n')
-np.save('anim.npy', imgs)
+np.save('tests/test-output/test-vid-data.npy', imgs)
 
 fourcc = cv2.VideoWriter_fourcc(*'MP4V')
-video=cv2.VideoWriter('platotetra.mp4', fourcc, 20, (1000, 1000)) # img dims must match resolution determined by dpi above
-
+video=cv2.VideoWriter('tests/test-output/test-vid.mp4', fourcc, 15, (1000, 1000))
 n = len(imgs)
 m = len(str(n))
 for idx, image in enumerate(imgs):

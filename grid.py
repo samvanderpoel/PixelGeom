@@ -190,3 +190,4 @@ class grid:
         fig.subplots_adjust(right=1.00, left=0.00, bottom=0.00, top=1.00)
         if filename is not None:
             fig.savefig(filename, dpi=dpi)
+        plt.close()
