@@ -13,16 +13,15 @@ s = 0.12
 a1, b1, c1 = np.random.rand(3)
 a2, b2, c2 = np.random.rand(3)
 
-tetra = tetrahedron(name = 'tetra', center = (s*499, s*499, s*100), rad = s*(600*(math.sin(i))**2), shade = 0)
-mygrid = grid(shapes = [tetra], dim = (round(s*1000), round(s*1000)))
-
 frames = 500
 low, high = 0.1, 10
 interval = (high - low) / (frames - 1)
 for idx, i in enumerate(np.linspace(0.1, 10, num = frames)):
     sys.stdout.write('\rCreating frame ' + str(idx+1) + ' of ' + str(frames))
     sys.stdout.flush()
-    mygrid.rotate_shape3d(name = 'tetra', axis = [a1, 4*math.cos(i)*b1, 4*math.sin(i)*c1], angle = interval * math.pi/5)
+    tetra = tetrahedron(name = 'tetra', center = (s*499, s*499, s*100), rad = s*(600*(math.sin(i))**2), shade = 0)
+    mygrid = grid(shapes = [tetra], dim = (round(s*1000), round(s*1000)))
+    mygrid.rotate_shape3d(name = 'tetra', axis = [a1, 4*math.cos(i)*b1, 4*math.sin(i)*c1], angle = i * math.pi/5)
     for idx, node in enumerate(list(tetra.nodes())):
         node_pos = np.array(tetra.nodes[node]["pos"])
         mygrid.add_shape(cube(name = 'ico' + str(idx), center = node_pos, rad = s*(300*(math.sin(i))**2), shade = 1))

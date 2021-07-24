@@ -21,4 +21,4 @@ mygrid.draw_shapes(['test'])
 cmap = rgb_to_cmap(colors = [[176,224,230]], penlow = None, penhigh = [160,0,0])
 
 # Plot canvas and shape
-mygrid.plot_grid('tests/test-output/testimg.png', cmap = cmap)
+mygrid.plot_grid('tests/test-output/test-fig.png', cmap = cmap)

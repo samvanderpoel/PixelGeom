@@ -10,14 +10,14 @@ if not os.path.isdir('tests/test-output'):
     os.makedirs('tests/test-output')
 
 # Specify cmap here:
-mycmap = rgb_to_cmap([[255,127,80], [189,183,107], [123,104,238], [0,128,128]])
+mycmap = rgb_to_cmap([[255,127,80], [189,183,107], [123,104,238], [0,128,128], [218,112,214]])
 
 def gradient(x, dim):
     idx, val = x
     temp_val = 1-idx[0]/(dim[0]-1)-idx[1]/(dim[1]-1)
     return [idx, (temp_val+1)/2]
 
-dim = (8, 8)
+dim = (10, 10)
 canvas = np.zeros(dim)
 enum = map(functools.partial(gradient, dim=dim), np.ndenumerate(canvas))
 for idx, val in enum:
