@@ -11,6 +11,27 @@ def center_of_mass(shp, dims = 2):
     com = np.asarray(com)
     return com
 
+def rotate_point(origin, point, angle):
+    ox, oy = origin
+    px, py = point
+    qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
+    qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
+    return np.array([qx, qy])
+
+def rotation_matrix(axis, angle):
+    """
+    Euler-Rodrigues formula for rotation about an axis in 3D.
+    """
+    axis = np.asarray(axis)
+    axis = axis / math.sqrt(np.dot(axis, axis))
+    a = math.cos(angle / 2.0)
+    b, c, d = -axis * math.sin(angle / 2.0)
+    aa, bb, cc, dd = a * a, b * b, c * c, d * d
+    bc, ad, ac, ab, bd, cd = b * c, a * d, a * c, a * b, b * d, c * d
+    return np.array([[aa + bb - cc - dd, 2 * (bc + ad), 2 * (bd - ac)],
+                     [2 * (bc - ad), aa + cc - bb - dd, 2 * (cd + ab)],
+                     [2 * (bd + ac), 2 * (cd - ab), aa + dd - bb - cc]])
+
 def tetrahedron(name, center, rad, shade = 1, rand = False):
     """
     Returns (possibly randomly oriented) tetrahedron shape object
@@ -250,14 +271,6 @@ class shape(nx.Graph):
             self.nodes[node]["pos"] = center + factor * outward_radial
     
     def rotate2d(self, origin, angle):
-        
-        def rotate_point(origin, point, angle):
-            ox, oy = origin
-            px, py = point
-            qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
-            qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
-            return np.array([qx, qy])
-        
         for node in list(self.nodes):
             self.nodes[node]["pos"] = rotate_point(origin = origin,
                                                    point = self.nodes[node]["pos"],
@@ -265,21 +278,6 @@ class shape(nx.Graph):
         return self
             
     def rotate3d(self, axis, angle, center = 'com'):
-        
-        def rotation_matrix(axis, angle):
-            """
-            Euler-Rodrigues formula for rotation about an axis in 3D.
-            """
-            axis = np.asarray(axis)
-            axis = axis / math.sqrt(np.dot(axis, axis))
-            a = math.cos(angle / 2.0)
-            b, c, d = -axis * math.sin(angle / 2.0)
-            aa, bb, cc, dd = a * a, b * b, c * c, d * d
-            bc, ad, ac, ab, bd, cd = b * c, a * d, a * c, a * b, b * d, c * d
-            return np.array([[aa + bb - cc - dd, 2 * (bc + ad), 2 * (bd - ac)],
-                             [2 * (bc - ad), aa + cc - bb - dd, 2 * (cd + ab)],
-                             [2 * (bd + ac), 2 * (cd - ab), aa + dd - bb - cc]])
-        
         center = center_of_mass(self, dims = self.dims) \
                  if center == 'com' else np.asarray(center)
         rot = rotation_matrix(axis, angle)
