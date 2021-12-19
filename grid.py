@@ -45,23 +45,27 @@ def draw_edge(arr, v1, v2, dim, shade = 1):
     v1, v2 = np.array(v1), np.array(v2)
     for i in np.linspace(0, 1, num = max(dim)):
         u = v1 + i*(v2-v1)
-        if round(u[0]) < 0 or math.ceil(u[1]) < 0 or math.floor(u[1]) < 0:
+        if u[0]<0 or u[1]<0 or u[0]>dim[0]-1 or u[1]>dim[1]-1:
             continue
-        try:
-            if all([d > 200 for d in dim]):
-                arr[round(u[0]), int(math.ceil(u[1]))] = shade
-                arr[round(u[0]), int(math.floor(u[1]))] = shade
-            else:
-                arr[round(u[0]), round(u[1])] = shade
-        except:
-            continue
+        if all([d > 200 for d in dim]):
+            arr[round(u[0]), int(math.ceil(u[1]))] = shade
+            arr[round(u[0]), int(math.floor(u[1]))] = shade
+        else:
+            arr[round(u[0]), round(u[1])] = shade
     return arr
+
+def draw_face(arr, face, dim, shade):
+    """
+    Draws face on 2D array given the corresponding vertices and shade.
+    For 3D drawings, only projected vertices must be passed.
+    """
+    # use permutation of coefficients to speed up computations.
 
 def projection(shp, node, griddim, proj = 'persp'):
     """
-    Perspective projection or orthographic projection of the point
-    'node' onto the x-y plane. Camera position (xc, yc) is taken to
-    be the center of mass of the shape.
+    Orthographic projection followed by a scaling of the point 'node' onto
+    the x-y plane. Camera position (xc, yc) is taken to be the center of mass
+    of the shape.
 
     Used in draw_shapes method.
     """
