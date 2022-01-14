@@ -1,0 +1,5 @@
+matplotlib==3.3.2
+networkx==2.5.1
+numpy==1.19.3
+opencv-python==4.5.4.60
+termcolor==1.1.0
