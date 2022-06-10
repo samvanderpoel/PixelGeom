@@ -8,6 +8,7 @@ import numpy as np
 from grid import *
 from shape import *
 
+
 imgs = []
 s = 0.25
 

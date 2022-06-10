@@ -18,8 +18,14 @@ for idx, i in enumerate(np.linspace(0.1, 10, num = frames)):
     mygrid = grid(shapes = [], dim = (25, 25))
     mygrid.paint_canvas(paint = 'gradient')
     j = high - i
-    cmap = rgb_to_cmap(colors = [[(255/interval)*i, (255/interval)*j**2, (255/interval)*i**3], [(255/interval)*j, (255/interval)*i**(1/2), (255/interval)*j**(1/3)]],
-                       penlow = None, penhigh = None)
+    cmap = rgb_to_cmap(
+        colors = [
+            [(255/interval)*i, (255/interval)*j**2, (255/interval)*i**3],
+            [(255/interval)*j, (255/interval)*i**(1/2), (255/interval)*j**(1/3)]
+        ],
+        penlow = None,
+        penhigh = None
+    )
     mygrid.plot_grid('pic.png', cmap = cmap, dpi = 200)
     imgs.append(cv2.imread('pic.png'))
     os.remove('pic.png')
