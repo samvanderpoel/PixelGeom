@@ -45,7 +45,7 @@ def tetrahedron(name, center, rad, shade=1, rand=False):
     return shp
 
 def cube_nx(center, rad):
-    """Create tetrahedron nx.Graph."""
+    """Create cube nx.Graph."""
     center = np.asarray(center)
     vertices = [
         np.array([ 1, 1, 1]) + center,
@@ -75,7 +75,7 @@ def cube_nx(center, rad):
     return graph
 
 def cube(name, center, rad, shade=1, rand=False):
-    """Create tetrahedron Shape object."""
+    """Create cube Shape object."""
     cfg = {
         "name":name,
         "shade":shade,
